@@ -1,8 +1,8 @@
-drop table if exists users;
-drop table if exists reservable_resources;
-drop table if exists reservation_slots;
-drop table if exists reservations;
 drop table if exists reservation_status_histories;
+drop table if exists reservations;
+drop table if exists reservation_slots;
+drop table if exists reservable_resources;
+drop table if exists users;
 
 
 create table users (

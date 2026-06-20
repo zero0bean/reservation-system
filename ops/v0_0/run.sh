@@ -1,5 +1,5 @@
 set -a
-. ./ops.v0_0/.env
+. ./ops/v0_0/.env
 set +a
 
 docker run -d --name reservation-db \
