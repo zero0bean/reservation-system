@@ -10,7 +10,9 @@ export class ReservationSlot {
         public readonly updtaedAt: Date
     ) { }
     canReserve() { }
-    reserveOne() { }
+    reserveOne() { 
+        this.remaining -= 1;
+    }
     releaseOne() { }
     haveRemaining(): boolean { 
         return this.remaining > 0

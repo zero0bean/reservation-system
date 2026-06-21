@@ -9,8 +9,14 @@ export class InMemoryReservationSlotRepository implements ReservationSlotReposit
     async findById(slotId: string): Promise<ReservationSlot | null> {
         const idx = this.reservationSlots.findIndex(slot => slot.id === slotId);
         if (idx === -1) return null;
+        // warn: same memory reference
         return this.reservationSlots[idx]!;
     }   
+    
+    async update(slot: ReservationSlot): Promise<void> {
+        let _slot = this.findById(slot.id)!;
+        _slot = slot;
+    }
 
     seedOne(): ReservationSlot {
         const slot = new ReservationSlot(

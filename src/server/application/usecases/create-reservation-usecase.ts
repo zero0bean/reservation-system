@@ -36,31 +36,23 @@ export class CreateReservationUsecase {
         if (!slot) {
             throw new Error(`존재하지 않는 Slot에는 예약이 불가능합니다`);
         }
+        console.log('[reservationSlot]', slot)
 
-        const reservationSlot = new ReservationSlot(
-            randomUUID(),
-            new Date("2026-06-21T20:00Z"),
-            new Date("2026-06-21T21:00Z"),
-            5,
-            1,
-            new Date(),
-            new Date(),
-        )
         const now = new Date();
-        const canCreate = CreateReservationPolicy.canCreate(reservationSlot, now);
+        const canCreate = CreateReservationPolicy.canCreate(slot, now);
         console.log('[canCreate]', canCreate)
         
         if (!canCreate) {
             // 일단 자리 부족으로만 표시하자
             throw new Error(`reservation slot capacity exceeded`);
         }
-        console.log('[reservationSlot]', reservationSlot)
         
-        const reservation = Reservation.create(reservationSlot.id);
+        slot.reserveOne();
+        const reservation = Reservation.create(slot.id);
         console.log('[reservation]', reservation)
         
         await this.reservationRepository.save(reservation)
-        
+        await this.slotRepository.update(slot);
         return reservation;
     }
 }
