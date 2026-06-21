@@ -9,8 +9,8 @@ create table users (
     id uuid primary key,
     name varchar(100),
     email varchar(100) unique,
-    created_at timestamp default now(),
-    updated_at timestamp default now()
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
 );
 
 create table reservable_resources (
@@ -18,28 +18,28 @@ create table reservable_resources (
     title varchar(50),
     description varchar(200),
     status varchar(50) default 'ACTIVE',
-    created_at timestamp default now(),
-    updated_at timestamp default now()
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
 );
 
 create table reservation_slots (
     id uuid primary key,
     resource_id uuid references reservable_resources(id),
-    start_at timestamp,
-    end_at timestamp,
+    start_at timestamptz,
+    end_at timestamptz,
     capacity int,
     remaining int,
     version int default 0,
-    created_at timestamp default now(),
-    updated_at timestamp default now()
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
 );
 
 create table reservations (
     id uuid primary key,
     user_id uuid references users(id),
     status varchar(50) default 'PENDING',
-    created_at timestamp default now(),
-    updated_at timestamp default now()
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
 );
 
 create table reservation_status_histories (
@@ -48,6 +48,6 @@ create table reservation_status_histories (
     reason text,
     before_status varchar(50),
     after_status varchar(50),
-    created_at timestamp default now()
+    created_at timestamptz default now()
 );
 
