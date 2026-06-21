@@ -7,4 +7,8 @@ export class InMemoryReservationRepository implements ReservationRepository {
     async save(reservation: Reservation): Promise<void> {
         this.reservations.push(reservation);
     }
+
+    all(): Reservation[] {
+        return this.reservations;
+    }
 }

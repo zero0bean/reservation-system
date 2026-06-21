@@ -1,10 +1,12 @@
-import { randomUUID } from 'node:crypto';
 
-import { ReservationSlots } from './domain/reservation-slot';
+import { ReservationSlot } from './domain/reservation-slot';
 import { Reservation } from './domain/reservation';
 import { CreateReservationPolicy } from './domain/create-reservation-policy';
 
 import { InMemoryReservationRepository } from './infra/persistence/reservation-respository-in-memory';
+import { InMemoryReservationSlotRepository } from './infra/persistence/reservation-slot-respository-in-memory';
+
+import { CreateReservationUsecase } from './application/usecases/create-reservation-usecase';
 
 async function main() {
     // create reservation usecase를 한번 상상해보자
@@ -21,31 +23,24 @@ async function main() {
      * 5. DB 저장
      * 
      */
-    const reservationRepository = new InMemoryReservationRepository();
+    const inMemoryReservationRepository = new InMemoryReservationRepository();
+    const inMemorySlotRepository = new InMemoryReservationSlotRepository();
 
-    const reservationSlot = new ReservationSlots(
-        randomUUID(),
-        new Date("2026-06-21T20:00Z"),
-        new Date("2026-06-21T21:00Z"),
-        5,
-        1,
-        new Date(),
-        new Date(),
-    )
-    const now = new Date();
-    const canCreate = CreateReservationPolicy.canCreate(reservationSlot, now);
-    console.log('[canCreate]', canCreate)
+    // seeding
+    const slot = inMemorySlotRepository.seedOne();
     
-    if (!canCreate) {
-        // 일단 자리 부족으로만 표시하자
-        throw new Error(`reservation slot capacity exceeded`);
-    }
-    console.log('[reservationSlot]', reservationSlot)
+
+    const createReservationUsecase = new CreateReservationUsecase(
+        inMemorySlotRepository,
+        inMemoryReservationRepository
+    );
     
-    const reservation = Reservation.create(reservationSlot.id);
-    console.log('[reservation]', reservation)
-    
-    await reservationRepository.save(reservation)
+    const result = await createReservationUsecase.execute({
+        slotId: slot.id
+    })
+    console.log('[CreateReservationUsecase/result]', result)
+    console.log(inMemoryReservationRepository.all())
+    console.log(inMemorySlotRepository.all())
 }
 
 

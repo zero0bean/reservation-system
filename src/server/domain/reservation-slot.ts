@@ -1,5 +1,5 @@
 
-export class ReservationSlots {
+export class ReservationSlot {
     constructor(
         public readonly id: string,
         public readonly startAt: Date,
