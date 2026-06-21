@@ -12,14 +12,16 @@ enum ReservationStatus {
 export class Reservation {
     constructor(
         public readonly id: string,
+        public readonly slotId: string,
         private status: ReservationStatus,
         private createdAt: Date,
         private updatedAt: Date
     ) { }
 
-    static create(): Reservation {
+    static create(slotId: string): Reservation {
         return new Reservation(
             crypto.randomUUID(),
+            slotId,
             ReservationStatus.PENDING,
             new Date(),
             new Date()
@@ -32,4 +34,6 @@ export class Reservation {
         }
         this.status = ReservationStatus.CONFIRM
     }
+
+
 }
